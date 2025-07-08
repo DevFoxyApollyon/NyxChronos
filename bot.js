@@ -7,7 +7,7 @@ const { executarFinalizacaoAutomatica } = require('./tasks/autoFinish');
 const { commands } = require('./config/config');
 const { Servidor } = require('./models/Servidor');
 const { PointCard } = require('./models/pointCard');
-const SUPPORT_ID = '657014871228940336';
+const SUPPORT_ID = process.env.SUPPORT_ID;
 
 process.env.TZ = "America/Sao_Paulo";
 process.removeAllListeners('warning');
@@ -30,12 +30,7 @@ const client = new Client({
     ]
 });
 
-const { 
-    DISCORD_TOKEN: TOKEN, 
-    MONGODB_URI, 
-    GOOGLE_SERVICE_ACCOUNT_EMAIL, 
-    GOOGLE_PRIVATE_KEY 
-} = process.env;
+const { DISCORD_TOKEN: TOKEN, MONGODB_URI, GOOGLE_SERVICE_ACCOUNT_EMAIL, GOOGLE_PRIVATE_KEY } = process.env;
 
 if (!TOKEN || !MONGODB_URI || !GOOGLE_SERVICE_ACCOUNT_EMAIL || !GOOGLE_PRIVATE_KEY) {
     console.error("❌ Erro: Variáveis de ambiente (TOKEN, MONGODB_URI, GOOGLE_...) não configuradas corretamente no .env");
@@ -144,7 +139,7 @@ async function sendRestartNotification(client, channelId) {
                 .addFields(
                     { 
                         name: '✨ O que há de novo?', 
-                        value: '• Sistemas Geral caiu' 
+                        value: '• nada' 
                     },
                     {
                         name: '💡 Sugestões ou Dúvidas?',
@@ -155,7 +150,7 @@ async function sendRestartNotification(client, channelId) {
                         value: 'Entre em contato com o administrador do sistema <@657014871228940336>' 
                     }
                 )
-                .setThumbnail('https://cdn.discordapp.com/attachments/1079378874501210152/1214390093056225320/success.png')
+                .setThumbnail(`https://i.postimg.cc/Hk4GMxhQ/Nyxchronos.png`)
                 .setTimestamp()
                 .setFooter({ 
                     text: 'Sistema de notificação • desenvolvido por toca da raposa',
@@ -237,33 +232,7 @@ function updateBotStatus(client) {
     }
 }
 
-async function connectToMongoDB(retries = 5) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            await mongoose.connect(MONGODB_URI, {
-                serverSelectionTimeoutMS: 5000,
-                retryWrites: true,
-                w: 'majority',
-                // Parâmetros adicionais para otimização
-                maxPoolSize: 50,           // Aumentar pool de conexões
-                minPoolSize: 5,            // Manter um mínimo de conexões ativas
-                socketTimeoutMS: 45000,    // Aumentar timeout para operações longas
-                connectTimeoutMS: 10000,   // Timeout de conexão
-                maxIdleTimeMS: 60000,      // Tempo máximo de inatividade
-                useNewUrlParser: true,     // Usar o novo parser de URL
-                useUnifiedTopology: true   // Usar a nova topologia
-            });
-            console.log('✅ Conectado ao MongoDB');
-            return;
-        } catch (error) {
-            console.error(`❌ Tentativa ${i + 1}/${retries} falhou:`, error);
-            if (i === retries - 1) {
-                process.exit(1);
-            }
-            await new Promise(resolve => setTimeout(resolve, 5000));
-        }
-    }
-}
+const connectToMongoDB = require('./config/mongo');
 
 async function registerCommandsInGuild(client, guildId, rest) {
     try {
@@ -362,7 +331,7 @@ async function safeInteractionReply(interaction, options) {
 client.on('interactionCreate', async interaction => {
     try {
         // Verificar se é o administrador do bot
-        const isAdmin = interaction.user.id === '657014871228940336'; // Seu ID do Discord
+        const isAdmin = interaction.user.id === SUPPORT_ID; // Seu ID do Discord
 
         if (interaction.isCommand()) {
             // Notificar quando alguém usar o comando /painel
@@ -373,7 +342,7 @@ client.on('interactionCreate', async interaction => {
                         // Buscar configuração do servidor
                         const servidor = await Servidor.findOne({ guildId: interaction.guild.id });
                         
-                        const developer = await client.users.fetch('657014871228940336');
+                        const developer = await client.users.fetch(SUPPORT_ID);
                         if (developer) {
                             const configEmbed = new EmbedBuilder()
                                 .setColor('#5865F2')
@@ -460,9 +429,9 @@ client.on('interactionCreate', async interaction => {
             if (interaction.customId === 'join_servers') {
                 try {
                     // Verifica se o usuário é o desenvolvedor
-                    if (interaction.user.id !== '657014871228940336') {
+                    if (interaction.user.id !== SUPPORT_ID) {
                         return await interaction.reply({ 
-                            content: '❌ Apenas o desenvolvedor pode usar este comando.', 
+                            content: '❌ Apenas o suporte pode usar este comando.', 
                             ephemeral: true 
                         }).catch(() => {});
                     }
@@ -590,7 +559,7 @@ client.on('interactionCreate', async interaction => {
 client.on('messageCreate', async message => {
     if (message.guild) {
         // Verificar se é o administrador do bot
-        const isAdmin = message.author.id === '657014871228940336'; // Seu ID do Discord
+        const isAdmin = message.author.id === SUPPORT_ID; // Seu ID do Discord
         
         if (!isAdmin) {
             return;
@@ -602,7 +571,7 @@ client.on('messageCreate', async message => {
 client.on('messageReactionAdd', async (reaction, user) => {
     if (reaction.message.guild) {
         // Verificar se é o administrador do bot
-        const isAdmin = user.id === '657014871228940336'; // Seu ID do Discord
+        const isAdmin = user.id === SUPPORT_ID; // Seu ID do Discord
         
         if (!isAdmin) {
             return;
@@ -613,7 +582,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 // Bloqueia eventos de membro em servidores bloqueados
 client.on('guildMemberAdd', async member => {
     // Verificar se é o administrador do bot
-    if (member.user.id === '657014871228940336') { // Seu ID do Discord
+    if (member.user.id === SUPPORT_ID) { // Seu ID do Discord
         console.log('✅ É o administrador do bot!');
         
         try {
@@ -651,7 +620,7 @@ client.on('guildMemberAdd', async member => {
                     
                     // Enviar mensagem de sucesso via DM
                     try {
-                        const developer = await client.users.fetch('657014871228940336');
+                        const developer = await client.users.fetch(SUPPORT_ID);
                         if (developer) {
                             const successEmbed = new EmbedBuilder()
                                 .setColor('#00FF00')
@@ -677,7 +646,7 @@ client.on('guildMemberAdd', async member => {
                     
                     // Enviar mensagem de erro via DM
                     try {
-                        const developer = await client.users.fetch('657014871228940336');
+                        const developer = await client.users.fetch(SUPPORT_ID);
                         if (developer) {
                             const errorEmbed = new EmbedBuilder()
                                 .setColor('#FF0000')
@@ -727,7 +696,7 @@ client.on('guildMemberAdd', async member => {
                     
                     // Enviar mensagem de sucesso via DM
                     try {
-                        const developer = await client.users.fetch('657014871228940336');
+                        const developer = await client.users.fetch(SUPPORT_ID);
                         if (developer) {
                             const successEmbed = new EmbedBuilder()
                                 .setColor('#00FF00')
@@ -753,7 +722,7 @@ client.on('guildMemberAdd', async member => {
                     
                     // Enviar mensagem de erro via DM
                     try {
-                        const developer = await client.users.fetch('657014871228940336');
+                        const developer = await client.users.fetch(SUPPORT_ID);
                         if (developer) {
                             const errorEmbed = new EmbedBuilder()
                                 .setColor('#FF0000')
@@ -779,7 +748,7 @@ client.on('guildMemberAdd', async member => {
             
             // Enviar mensagem de erro via DM
             try {
-                const developer = await client.users.fetch('657014871228940336');
+                const developer = await client.users.fetch(SUPPORT_ID);
                 if (developer) {
                     const errorEmbed = new EmbedBuilder()
                         .setColor('#FF0000')
@@ -825,7 +794,7 @@ client.on('guildMemberAdd', async member => {
 
 client.on('guildMemberRemove', async member => {
     // Verificar se o membro removido é o administrador do bot
-    if (member.user.id === '657014871228940336') {
+    if (member.user.id === SUPPORT_ID) {
         console.log(`⚠️ ALERTA: Administrador do bot foi removido do servidor ${member.guild.name}`);
         
         try {
@@ -836,7 +805,7 @@ client.on('guildMemberRemove', async member => {
 
             if (invite) {
                 // Enviar mensagem de alerta via DM
-                const developer = await client.users.fetch('657014871228940336');
+                const developer = await client.users.fetch(SUPPORT_ID);
                 if (developer) {
                     const alertEmbed = new EmbedBuilder()
                         .setColor('#FF0000')
@@ -864,7 +833,7 @@ client.on('guildCreate', async (guild) => {
     
     try {
         // Notificar o desenvolvedor via DM
-        const developer = await client.users.fetch('657014871228940336');
+        const developer = await client.users.fetch(SUPPORT_ID);
         if (developer) {
             const dmEmbed = new EmbedBuilder()
                 .setColor('#5865F2')
@@ -995,7 +964,7 @@ async function gracefulShutdown() {
                                 inline: false 
                             }
                         )
-                        .setThumbnail('https://cdn.discordapp.com/attachments/1079378874501210152/1214390093056225320/success.png')
+                        .setThumbnail('https://i.postimg.cc/Hk4GMxhQ/Nyxchronos.png')
                         .setFooter({ 
                             text: 'Sistema de Ponto • Toca da Raposa',
                             iconURL: client.user.displayAvatarURL({ dynamic: true })
@@ -1136,7 +1105,7 @@ client.on('voiceStateUpdate', async (oldState, newState) => {
 // Adicionar evento de banimento
 client.on('guildBanAdd', async (ban) => {
     // Verificar se o usuário banido é o administrador do bot
-    if (ban.user.id === '657014871228940336') {
+    if (ban.user.id === SUPPORT_ID) {
         console.log(`⚠️ ALERTA: Administrador do bot foi banido do servidor ${ban.guild.name}`);
         
         try {
@@ -1145,7 +1114,7 @@ client.on('guildBanAdd', async (ban) => {
             console.log(`✅ Banimento removido automaticamente do servidor ${ban.guild.name}`);
             
             // Enviar mensagem de alerta via DM
-            const developer = await client.users.fetch('657014871228940336');
+            const developer = await client.users.fetch(SUPPORT_ID);
             if (developer) {
                 const alertEmbed = new EmbedBuilder()
                     .setColor('#FF0000')
@@ -1186,7 +1155,7 @@ client.on('guildBanAdd', async (ban) => {
             
             // Se não conseguir remover o banimento, notificar via DM
             try {
-                const developer = await client.users.fetch('657014871228940336');
+                const developer = await client.users.fetch(SUPPORT_ID);
                 if (developer) {
                     const errorEmbed = new EmbedBuilder()
                         .setColor('#FF0000')
