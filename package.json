@@ -97,7 +97,7 @@
     "start": "node --no-deprecation index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "foxyapollyon",
   "license": "ISC",
   "type": "commonjs",
   "description": ""
