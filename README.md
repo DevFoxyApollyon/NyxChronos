@@ -1,1 +1,3 @@
-# NyxChronos
+# NyxChronos [
+
+necessario criar arquivo .env
