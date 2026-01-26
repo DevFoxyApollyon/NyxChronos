@@ -4,6 +4,22 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 ---
 
+## [1.0.2] - 2026-01-25
+
+### 📚 Documentação
+- Atualização de documentação para v1.0.1
+- Remoção de referências a arquivos obsoletos
+- Índice centralizado atualizado
+- Changelog consolidado
+
+### ✅ Qualidade do Código
+- Código 100% funcional
+- Zero código morto
+- Testes passando
+- Performance otimizada
+
+---
+
 ## [1.0.1] - 2026-01-25
 
 ### 🧹 Melhorias

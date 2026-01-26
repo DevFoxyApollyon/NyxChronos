@@ -1,4 +1,4 @@
-# 📚 ÍNDICE CENTRAL - NyxChronos v1.0.1
+# 📚 ÍNDICE CENTRAL - NyxChronos v1.0.2
 
 ## 🎯 Bem-vindo à Documentação!
 
