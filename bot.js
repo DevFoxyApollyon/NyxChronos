@@ -210,7 +210,6 @@ function getCurrentTheme() {
     return themes.lateNight;                           
 }
 
-let togglePresence = false;
 function updateBotStatus(client) {
     const theme = getCurrentTheme();
     const hour = new Date().getHours();
@@ -555,29 +554,7 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-// Bloqueia mensagens em servidores bloqueados
-client.on('messageCreate', async message => {
-    if (message.guild) {
-        // Verificar se é o administrador do bot
-        const isAdmin = message.author.id === SUPPORT_ID; // Seu ID do Discord
-        
-        if (!isAdmin) {
-            return;
-        }
-    }
-});
-
-// Bloqueia reações em servidores bloqueados
-client.on('messageReactionAdd', async (reaction, user) => {
-    if (reaction.message.guild) {
-        // Verificar se é o administrador do bot
-        const isAdmin = user.id === SUPPORT_ID; // Seu ID do Discord
-        
-        if (!isAdmin) {
-            return;
-        }
-    }
-});
+// Listeners de mensagens e reações removidos (v1.0.1 - código morto)
 
 // Bloqueia eventos de membro em servidores bloqueados
 client.on('guildMemberAdd', async member => {
