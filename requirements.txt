@@ -1,0 +1,4 @@
+discord.js
+dotenv
+mongoose
+npm install -g squarecloud
