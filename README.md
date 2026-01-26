@@ -360,13 +360,6 @@ Sua comunidade está convidada a contribuir! Por favor:
 
 ---
 
-## 📜 Licença
-
-Este projeto é desenvolvido para a comunidade da Toca da Raposa. 
-Todos os direitos reservados © 2024-2026.
-
----
-
 ## ⭐ Agradecimentos
 
 Desenvolvido com ❤️ por foxy apollyon.
