@@ -1,4 +1,4 @@
-# 📚 ÍNDICE CENTRAL - NyxChronos v1.0.0
+# 📚 ÍNDICE CENTRAL - NyxChronos v1.0.1
 
 ## 🎯 Bem-vindo à Documentação!
 
@@ -16,7 +16,7 @@ Aqui você encontra o **mapa completo** de toda a documentação do NyxChronos. 
 ### Para Desenvolvedores
 1. **[README.md](../README.md)** - Estrutura do projeto (30 min)
 2. **[TECHNICAL_ANALYSIS.md](#technical-analysis)** - Arquitetura (45 min)
-3. **[FEATURES_NOT_USED.md](#features-not-used)** - Código morto (20 min)
+3. **[CHANGELOG.md](#changelog)** - Histórico e planejamento (20 min)
 4. **[TESTING_GUIDE.md](#testing-guide)** - Testes (30 min)
 
 ### Para Arquitetos/Tech Leads

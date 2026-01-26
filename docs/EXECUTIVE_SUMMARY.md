@@ -1,4 +1,4 @@
-# 📊 RESUMO EXECUTIVO - NyxChronos v1.0.0
+# 📊 RESUMO EXECUTIVO - NyxChronos v1.0.1
 
 ## 🎯 Visão Geral
 

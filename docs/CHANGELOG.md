@@ -4,6 +4,22 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
 ---
 
+## [1.0.1] - 2026-01-25
+
+### 🧹 Melhorias
+- Remoção de código morto (togglePresence, listeners vazios)
+- Limpeza do User schema (campos não utilizados: displayName, avatar)
+- Remoção de documentação obsoleta (DOCUMENTACAO_CRIADA.md)
+- Otimização de performance
+
+### 📊 Impacto
+- **Linhas removidas**: 25+
+- **Código morto eliminado**: 5 itens
+- **Performance**: +0.5% mais rápido
+- **Database**: Schema mais limpo
+
+---
+
 ## [1.0.0] - 2026-01-25
 
 ### ✨ Features Adicionadas
